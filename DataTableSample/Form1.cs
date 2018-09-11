@@ -20,6 +20,12 @@ namespace DataTableSample
             InitializeComponent();
             dataGridView1.DataSource = DataTable;
             LoadDb();
+            HideColumns();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            UpdateDatabase();
         }
 
         public void LoadDb()
@@ -32,12 +38,13 @@ namespace DataTableSample
             }
         }
 
-        private static SQLiteConnection GetConnection()
+        private void HideColumns()
         {
-            return new SQLiteConnection(@"Data Source=features.db;");
+            dataGridView1.Columns["id"].Visible = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private void UpdateDatabase()
         {
             using (var connection = GetConnection())
             {
@@ -48,6 +55,11 @@ namespace DataTableSample
                 adapter.UpdateCommand = builder.GetUpdateCommand();
                 adapter.Update(DataTable);
             }
+        }
+
+        private static SQLiteConnection GetConnection()
+        {
+            return new SQLiteConnection(@"Data Source=features.db;");
         }
     }
 
