@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace DataTableSample
             dataGridView1.DataSource = DataTable;
             LoadDb();
             HideColumns();
+            GetColumnNames();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -60,6 +62,20 @@ namespace DataTableSample
         private static SQLiteConnection GetConnection()
         {
             return new SQLiteConnection(@"Data Source=features.db;");
+        }
+
+        private void GetColumnNames()
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                var command = new SQLiteCommand("select * from features", connection);
+                var dataReader = command.ExecuteReader();
+                for (var i = 0; i < dataReader.FieldCount; i++)
+                {
+                    Debug.WriteLine(dataReader.GetName(i));
+                }
+            }
         }
     }
 
